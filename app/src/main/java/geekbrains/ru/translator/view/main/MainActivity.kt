@@ -10,6 +10,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -30,7 +32,10 @@ import geekbrains.ru.translator.utils.convertMeaningsToString
 import geekbrains.ru.translator.view.descriptionscreen.DescriptionActivity
 import geekbrains.ru.translator.view.main.adapter.MainAdapter
 import geekbrains.ru.utils.network.isOnline
+import geekbrains.ru.utils.ui.ViewByIdDelegate
+import geekbrains.ru.utils.ui.viewById
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG = "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
@@ -40,7 +45,18 @@ private const val REQUEST_CODE = 42
 private const val SEARCH_WORD_EXTRA = "f76a288a-5dcc-43f1-ba89-7fe1d53f63b1"
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
+
+//    override val layoutRes = R.layout.activity_main
     override lateinit var model: MainViewModel
+
+    private val mainActivityRecyclerView by viewById<RecyclerView>(R.id.main_activity_recyclerview)
+    private val searchFAB by viewById<FloatingActionButton>(R.id.search_fab)
+//    private val sFab by lazy { findViewById<FloatingActionButton>(R.id.search_fab) }
+
+//    private val sFab by ViewByIdDelegate<FloatingActionButton>({
+//        window.decorView.findViewById(android.R.id.content)
+//    }, R.id.search_fab)
+
     private lateinit var splitInstallManager: SplitInstallManager
     private lateinit var appUpdateManager: AppUpdateManager
 
@@ -252,7 +268,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private fun iniViewModel() {
         check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
         injectDependencies()
-        val viewModel: MainViewModel by viewModel()
+        val viewModel: MainViewModel by currentScope.inject()
         model = viewModel
         model.subscribe().observe(this@MainActivity, Observer<AppState> { renderData(it) })
     }
