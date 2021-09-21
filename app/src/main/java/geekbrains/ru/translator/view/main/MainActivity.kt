@@ -31,12 +31,9 @@ import geekbrains.ru.translator.di.injectDependencies
 import geekbrains.ru.translator.utils.convertMeaningsToString
 import geekbrains.ru.translator.view.descriptionscreen.DescriptionActivity
 import geekbrains.ru.translator.view.main.adapter.MainAdapter
-import geekbrains.ru.utils.network.isOnline
-import geekbrains.ru.utils.ui.ViewByIdDelegate
 import geekbrains.ru.utils.ui.viewById
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.scope.currentScope
-import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG = "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
 private const val HISTORY_ACTIVITY_PATH = "geekbrains.ru.history.view.history.HistoryActivity"
@@ -46,7 +43,7 @@ private const val SEARCH_WORD_EXTRA = "f76a288a-5dcc-43f1-ba89-7fe1d53f63b1"
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
 
-//    override val layoutRes = R.layout.activity_main
+    override val layoutRes = R.layout.activity_main
     override lateinit var model: MainViewModel
 
     private val mainActivityRecyclerView by viewById<RecyclerView>(R.id.main_activity_recyclerview)
@@ -84,7 +81,6 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private val onSearchClickListener: SearchDialogFragment.OnSearchClickListener =
         object : SearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
-                isNetworkAvailable = isOnline(applicationContext)
                 if (isNetworkAvailable) {
                     model.getData(searchWord, isNetworkAvailable)
                 } else {
