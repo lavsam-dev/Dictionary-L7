@@ -1,5 +1,7 @@
 package geekbrains.ru.translator.view
 
+import android.util.Log
+
 interface Icar {
     fun drive()
 }
@@ -40,16 +42,32 @@ class Monster(
     private val car: Car,
     private val boat: Boat,
     private val duck: Duck
-) : Icar, IBoat, IDuck {
-    override fun drive() {
-        // car code
-    }
+) : Icar by car, IBoat by boat, IDuck {
+
+//    override fun drive() {
+//        // car code
+//        car.drive()
+//    }
 
     override fun krya() {
         // krya code
+        Log.d("Monster", "krya krya")
+        duck.krya()
     }
 
-    override fun swim() {
-        // boat code
-    }
+//    override fun swim() {
+//        // boat code
+//        duck.swim()
+//    }
+}
+
+fun main() {
+    val car = Car()
+    val boat = Boat()
+    val duck = Duck()
+    val monster = Monster(car, boat, duck)
+
+    monster.drive()
+    monster.krya()
+    monster.swim()
 }
